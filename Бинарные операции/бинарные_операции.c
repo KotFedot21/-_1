@@ -8,9 +8,9 @@ int main()
     c = (a& 0xFF);
     printf ( "First byte of a =%x\n",c);
     c = ((a>>8)& 0xFF);
-    printf ( "First byte of a =%x\n",c);
+    printf ( "Second byte of a =%x\n",c);
     c = ((a>>16)& 0xFF);
-    printf ( "First byte of a =%x\n",c);
+    printf ( "Third byte of a =%x\n",c);
 
     a = a & 0x00FFFFFF;
     printf("\nChanged number is %x\n ", a );

@@ -1,0 +1,100 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+
+/*void input (int *c, int *d)
+{
+    printf("введите значение а и b:\n");
+    scanf("%d%d",&c,&d);
+    //printf("*a1=%d\n",*c);
+    printf ("&a1=%d\n",&c);
+    //return ();
+}*/
+
+ int summ (int *a, int *b)
+{
+    int s=0;
+
+    while(getchar()!='\n');
+    s=*a+*b;
+    printf("%d+%d=%d\n",*a,*b,s);
+    return s;
+
+}
+
+void subtr (int *a, int *b)
+{
+    int s=0;
+
+    while(getchar()!='\n');
+    s=*a-*b;
+    printf("%d-%d=%d\n",*a,*b,s);
+    return s;
+}
+
+void mult (int *a, int *b)
+{
+    int s=0;
+
+    while(getchar()!='\n');
+    s=(*a)*(*b);
+    printf("%d*%d=%d\n",*a,*b,s);
+    return s;
+}
+
+float divis (int *a, int *b)
+{
+    float s=0;
+
+    while(getchar()!='\n');
+    s=(float)(*a)/(*b);//приведение к другому типу
+    printf("%d/%d=%f\n",*a,*b,s);
+    return s;
+}
+
+
+int main()
+{
+  setlocale(LC_ALL, "Rus");
+
+  int selection =0;
+  int x;
+  int y;
+  //int z;
+  printf("введите значение а и b:\n");
+  scanf("%d%d",&x,&y);
+  printf ("Что бы вы ходели сделать?\n 1. Cложить значения\n 2. Вычесть значения \n 3. Умножить значения\n 4. Поделить значения\n 5. Выход из программы");
+  printf("\nВведите выбраный пункт:\n");
+  scanf("%d",&selection);
+    do
+      {
+        switch(selection)
+        {
+            case 1:
+                summ(&x, &y);
+                break;
+            case 2:
+                subtr(&x,&y);
+                break;
+            case 3:
+                mult(&x,&y);
+                break;
+            case 4:
+                divis(&x,&y);
+                break;
+            case 5 :
+                selection=5;
+                exit;
+                break;
+
+            default:
+                 printf( "Неправильный ввод.\n" );
+                 selection=5;
+                 break;
+              //printf( "Неправильный ввод.\n" );
+
+        }
+      } while(selection!=5);
+
+  return 0;
+}

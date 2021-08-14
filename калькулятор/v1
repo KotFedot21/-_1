@@ -1,100 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <locale.h>
 
-/*void input (int *c, int *d)
+//#define sh 5
+//#define be 3
+//#define lo 1
+
+typedef struct
 {
-    printf("введите значение а и b:\n");
-    scanf("%d%d",&c,&d);
-    //printf("*a1=%d\n",*c);
-    printf ("&a1=%d\n",&c);
-    //return ();
-}*/
+    int rowN;
+    int rowSize;
+    
+    int* arr1;
+    int* arr2;
+    
+}pthrData;
 
- int summ (int *a, int *b)
+void* threadFunc(void* thread_data)
 {
-    int s=0;
-
-    while(getchar()!='\n');
-    s=*a+*b;
-    printf("%d+%d=%d\n",*a,*b,s);
-    return s;
-
+    pthrData *data=(pthrData*)thread_data;
+    
+    for(int i =0; i <data->rowSize; i++)
+    {
+        dat->arr1[i]=data->arr2[i]-data->arr1[i];
+        
+        return 0;
+    }
 }
-
-void subtr (int *a, int *b)
-{
-    int s=0;
-
-    while(getchar()!='\n');
-    s=*a-*b;
-    printf("%d-%d=%d\n",*a,*b,s);
-    return s;
-}
-
-void mult (int *a, int *b)
-{
-    int s=0;
-
-    while(getchar()!='\n');
-    s=(*a)*(*b);
-    printf("%d*%d=%d\n",*a,*b,s);
-    return s;
-}
-
-float divis (int *a, int *b)
-{
-    float s=0;
-
-    while(getchar()!='\n');
-    s=(float)(*a)/(*b);//приведение к другому типу
-    printf("%d/%d=%f\n",*a,*b,s);
-    return s;
-}
-
 
 int main()
 {
-  setlocale(LC_ALL, "Rus");
-
-  int selection =0;
-  int x;
-  int y;
-  //int z;
-  printf("введите значение а и b:\n");
-  scanf("%d%d",&x,&y);
-  printf ("Что бы вы ходели сделать?\n 1. Cложить значения\n 2. Вычесть значения \n 3. Умножить значения\n 4. Поделить значения\n 5. Выход из программы");
-  printf("\nВведите выбраный пункт:\n");
-  scanf("%d",&selection);
-    do
-      {
-        switch(selection)
-        {
-            case 1:
-                summ(&x, &y);
-                break;
-            case 2:
-                subtr(&x,&y);
-                break;
-            case 3:
-                mult(&x,&y);
-                break;
-            case 4:
-                divis(&x,&y);
-                break;
-            case 5 :
-                selection=5;
-                exit;
-                break;
-
-            default:
-                 printf( "Неправильный ввод.\n" );
-                 selection=5;
-                 break;
-              //printf( "Неправильный ввод.\n" );
-
-        }
-      } while(selection!=5);
-
-  return 0;
+    int shops[5]={200,200, 250,300,150};
+    int beyers[3]={1000,1000,1000};
+    int loaber =200;
+    
+    pthread_t* threads = (pthread_t*)malloc(be * sizeof(pthread_t));//выделяем память под массив идентификаторов потоков
+    pthrData* threadData=(pthrData*)malloc(be * sizeof(pthrData));// структуры с потоковыми данными 
+    
+    //инициализирую структуры потоков
+    for(int i=0; i<3; i++)
+    {
+        threadData[i].rowN=i;
+        threadData[i].arr1=shops;
+        threadData[i].arr2=beyers;
+    }
+    
 }

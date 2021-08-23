@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+int main()
+{
+   FILE  *f1;
+   int f2=0;
+   int i=0;
+   char fe2;
+   char name[15]="my_f.txt";
+   int size=0;
+   char fe[15];
+
+
+   printf("Vvedite stroky\n");
+   fgets(fe,15,stdin);
+   //scanf("%c", &tabl[i]);
+   f1=fopen(name,"w");
+   if (f1==NULL)
+    {
+        printf("error file\n");
+        getchar();
+        return -1;
+    }
+
+
+   fputs(fe,f1);
+
+   fclose(f1);
+
+
+   if ((f2=open(name,O_RDONLY))==0)
+    {
+        printf("error\n");
+        return -2;
+    }
+
+    size=lseek(f2,0,SEEK_END);
+    for (i=1; i<=size;i++)
+        {
+            lseek (f2,-i,SEEK_END);
+            read (f2,&fe2,1);
+            printf("%c",fe2);
+        }
+   printf("\n");
+   close(f2);
+
+   return 0;
+
+
+}

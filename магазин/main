@@ -1,0 +1,130 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+#include <pthread.h>
+
+#define sh 5
+#define be 3
+
+struct pr
+{
+    int a;
+    int *ptr;
+};
+
+
+
+pthread_mutex_t mutex[5];
+
+pthread_mutex_t mut;
+
+
+void *print_loader(void *ptr_shop)
+{
+    int *shops=(int*)ptr_shop;
+    int buff;
+    int i = 0;
+
+     while (i <= 7 ){
+        pthread_mutex_lock(&mut);
+        buff = 0 + rand() % 5;
+        shops[buff] = shops[buff] + 500;
+        printf("\nWorker: In the shop %d were %d products. Now = %d\n", buff,
+        shops[buff] - 500, shops[buff]);
+        pthread_mutex_unlock(&mut);
+
+       sleep(2);
+        i++;
+  }
+
+
+  return 0;
+}
+
+void *print_buyer(void *ptr_shop)
+{
+    struct pr *param =(struct pr*)ptr_shop;
+    int *ptr=param->ptr;
+    int *shops =ptr;
+    int id= param->a;
+    int buff;
+    buff= 0 + rand() % 5;
+    pthread_mutex_lock(&mutex[buff]);
+
+
+    int zp=0;
+    zp=900+rand()%201;
+    printf("\nI am buyer №%d initail value: %d\n",id,zp);
+     while (zp > 0) {
+
+
+    buff= 0 + rand() % 5;
+    if (zp >= shops[buff]) {
+      zp = zp - shops[buff];
+
+      printf("\nByer %d:\tI am going to shop N: %d\t\tIn shop: %d Me: %d", id, buff, shops[buff], zp);
+      shops[buff] = 0;
+
+    } else {
+          shops[buff] = shops[buff] - zp;
+          zp = 0;
+          printf("\nByer %d:\tI am going to shop N: %d\tIn shop: %d Me: %d", id, buff, shops[buff], zp);
+            }
+    pthread_mutex_unlock(&mutex[buff]);
+    sleep(2);
+
+    if (zp == 0) {
+      printf("\nByer %d:\t I have done. I am going home!\n", id);
+      return 0;
+    }
+  }
+}
+
+int main(int argc, char const *argv[])
+{
+
+    pthread_mutex_init(&mutex[5], NULL);
+
+    pthread_mutex_init(&mut, NULL);
+
+    srand(time(NULL));
+
+    int loader =200;
+    pthread_t thread1[3];
+    pthread_t thread2;
+    int shops[5];
+    int i=0;
+    int buff;
+
+    struct pr parm[3];
+
+
+  for (int i = 0; i < 5; i++)
+   {
+        shops[i] = 0 + rand() % 500;
+   }
+  printf("\nCreating byers!\n");
+
+    for(i=0;i<3;i++)
+    {
+        parm[i].a = i;
+        parm[i].ptr = &shops[0];
+        pthread_create(&thread1[i],NULL,print_buyer,&parm[i]);
+    }
+  pthread_create(&thread2,NULL,print_loader,&shops[0]);
+
+    for(i=0;i<3;i++)
+        {
+            pthread_join(thread1[i],NULL);
+        }
+
+        pthread_join(thread2,NULL);
+    for(i=0;i<5;i++)
+        {
+            pthread_mutex_destroy(&mutex[i]);
+        }
+
+  pthread_mutex_destroy(&mut);
+  return 0;
+}

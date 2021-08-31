@@ -29,6 +29,6 @@ int main()
         nbytes = read(fd[0],buf,sizeof(buf));
         printf("the descendant said: %s",buf);
     }
-    //printf("Hello world!\n");
+  
     return 0;
 }

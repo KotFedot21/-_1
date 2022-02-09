@@ -3,8 +3,8 @@
 from redminelib import Redmine
 
 
-URL='http://red.eltex.loc'
-KEY='2d3b622576170e6b31bd4d4547c83be4e7cc91c1'
+URL=''
+KEY=''
 redmine = Redmine(URL, key=KEY)
 
 userlist = [

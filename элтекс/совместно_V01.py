@@ -31,6 +31,12 @@ information_for_the_week(d)
 plt.plot(d, tasks, '--r', label=userID[0])
 plt.plot(d, tasks1, ':b', label=userID[1])
 plt.plot(d, tasks2, 'k', label=userID[2])
+
+""""
+# Be sure to only pick integer tick locations.
+for axis in [ax.xaxis, ax.yaxis]:
+    axis.set_major_locator(ticker.MaxNLocator(integer=True))
+"""
 plt.legend(fontsize=14)
 
 plt.show()

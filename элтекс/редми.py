@@ -12,8 +12,8 @@ time = datetime.date(2022, 1, 12)
 
 
 
-URL='http://red.eltex.loc'
-KEY='08c017a3b50e09357a72e4448cc1aa6f09271755'
+URL=''
+KEY=''
 redmine = Redmine(URL, key=KEY)
 userlist = [
         69

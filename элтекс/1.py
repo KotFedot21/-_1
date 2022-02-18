@@ -9,8 +9,8 @@ import numpy as np
 URL='http://red.eltex.loc'
 KEY='08c017a3b50e09357a72e4448cc1aa6f09271755'
 redmine = Redmine(URL, key=KEY)
-userlist = [69,1027]
-statuslist =[3]
+userlist = [69]
+statuslist =[3,9,13]
 
 def GetAllIssuesInAllProjects(redmine, userlist, statuslist):
 
@@ -34,7 +34,7 @@ def GetAllIssuesInAllProjects(redmine, userlist, statuslist):
                         a = []
                         
                         redmine_user_ge_firstname = str(redmine.user.get(userid).firstname)
-                        a.append(redmine_user_ge_firstname)
+                        #a.append(redmine_user_ge_firstname)
                         
 
                         msp_project_name = str(msp.project.name)
@@ -42,15 +42,27 @@ def GetAllIssuesInAllProjects(redmine, userlist, statuslist):
                         
                                                 
                         issue_id = str(issue.id)
-                        a.append(issue_id)
+                        #a.append(issue_id)
                         
                         
                     
                         issue.status_name = str(issue.status.name)
-                        a.append(issue.status_name)
                         
-                        a.append(None)
-                        a.append(None)
+                        
+                        #сравнение строк для определения 
+                        
+                        if issue.status_name=='Resolved':
+                            a.append(issue_id)
+                            a.append("----")
+                            a.append("----")
+                        elif issue.status_name=='Feedback':   
+                            a.append("----")
+                            a.append(issue_id)
+                            a.append("----")
+                        elif issue.status_name=='Testing':
+                            a.append("----")
+                            a.append("----")
+                            a.append(issue_id)   
                           
                         matrix.append(a)
                         
@@ -64,7 +76,7 @@ def GetAllIssuesInAllProjects(redmine, userlist, statuslist):
         except:
             continue
             
-    headings = ['User', "Название проекта ", 'номер задачи', 'Статус']
+    headings = [ "   Название проекта    ", '    Resolved    ', '     Feedback     ', '     Testing    ' ]
 
     # ------ Window Layout ------
     layout = [[sg.Table(values=matrix, headings=headings, max_col_width=35,
@@ -78,7 +90,7 @@ def GetAllIssuesInAllProjects(redmine, userlist, statuslist):
               [sg.Button('Выход')]]
 
     # ------ Create Window ------
-    window = sg.Window('Загруженность', layout)
+    window = sg.Window('Aлексей', layout)
 
     # ------ Event Loop ------
     while True:
@@ -89,4 +101,6 @@ def GetAllIssuesInAllProjects(redmine, userlist, statuslist):
 
     window.close()
      
-GetAllIssuesInAllProjects(redmine, userlist, statuslist) 
+GetAllIssuesInAllProjects(redmine, userlist, statuslist)  
+
+

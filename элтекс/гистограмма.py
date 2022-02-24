@@ -17,10 +17,11 @@ redmine = Redmine(URL, key=KEY)
 userlist = [69,1027,1125]
 statuslist =[5]
 speed=[]
+current_date = date.today()## дата сегодня
 
-def GetAllIssuesInAllProjects(redmine, userlist, statuslist):
+def GetAllIssuesInAllProjects(redmine, userlist, statuslist,current_date ):
     #prjc = 0
-    
+    current_date1 = str(current_date)
     for userid in userlist:
         try:
             
@@ -31,7 +32,7 @@ def GetAllIssuesInAllProjects(redmine, userlist, statuslist):
                 
                 for statusid in statuslist:
                     #prjc += 1
-                    issues = redmine.issue.filter(project_id=msp.project.id,updated_on='><2022-02-01|2022-02-22', status_id=statusid, cf_2=userid)
+                    issues = redmine.issue.filter(project_id=msp.project.id,updated_on= current_date1, status_id=statusid, cf_2=userid)
                     
                     for issue in issues:
                         
@@ -50,7 +51,7 @@ def GetAllIssuesInAllProjects(redmine, userlist, statuslist):
     
     return speed
 
-print(GetAllIssuesInAllProjects(redmine, userlist, statuslist))
+print(GetAllIssuesInAllProjects(redmine, userlist, statuslist,current_date))
 
 
 name = ("Алексей","Игорь", "Алена")
@@ -62,17 +63,3 @@ plt.ylabel('Задачи ')
 plt.title('Сотрудники')
     
 plt.show()
-
-
-
-"""def information_for_the_day ():
-    current_date = datetime.datetime.today().replace(microsecond=0)
-    print(current_date)
-    zero_time = current_date - timedelta(minutes=current_date.minute,seconds=current_date.second,hours=current_date.hour)##получаем начало дня
-    print (zero_time)
-    while zero_time <= current_date :
-        print ("информация за 5 минуту ")
-        zero_time= zero_time + timedelta(minutes=5)
-        print(zero_time)
-information_for_the_day()
-"""

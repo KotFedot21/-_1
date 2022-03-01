@@ -103,9 +103,7 @@ def GetAllIssuesInAllProjects(redmine, userlist,statuslist):
                         for issue in issues:
                             
                             
-                            if th==issue.id:
-                                3+5
-                            else:
+                            if th!=issue.id:
                                 prjc += 1   
                                 print(redmine.user.get(userid).firstname, redmine.user.get(userid).lastname)
                                 print('\tPROJECT NAME:', msp.project.name, 'ID:', msp.project.id)

@@ -134,7 +134,8 @@ menu_def =[ ['Статистика',['день','неделя','указать']
 #-----Макет формы----#
 layout = [
     [sg.Menu(menu_def, tearoff=False)]]
-window = sg.Window('Editor', layout=layout, margins=(0,0), resizable=True, return_keyboard_events=True, finalize=True)
+window = sg.Window('Editor', layout=layout, margins=(0,0), resizable=True, return_keyboard_events=True, finalize=True, size=(750,350))
+
 
 #----Цикл обработки событий ----#
 while True:

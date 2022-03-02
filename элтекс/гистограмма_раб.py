@@ -24,9 +24,9 @@ def GetAllIssuesInAllProjects(redmine, userlist, statuslist,current_date ):
     current_date1 = str(current_date)
     for userid in userlist:
         try:
-            
+            th=[]
             ms = redmine.user.get(userid, include='memberships')
-            prjc = 0
+            
             for msp in ms.memberships:
                
                 
@@ -35,15 +35,13 @@ def GetAllIssuesInAllProjects(redmine, userlist, statuslist,current_date ):
                     issues = redmine.issue.filter(project_id=msp.project.id,updated_on= current_date1, status_id=statusid, cf_2=userid)
                     
                     for issue in issues:
-                        
-                        #print(redmine.user.get(userid).firstname, redmine.user.get(userid).lastname)
-                        #print('\tPROJECT NAME:', msp.project.name, 'ID:', msp.project.id)
-                        #print('\t\tНомер:', issue.id, 'Статус:', issue.status.name, 'Версия:', issue.fixed_version.name,"updated on", issue.updated_on,  'Тема:', issue.subject)
-                        prjc += 1
-                        #print("кол-во задач",prjc)
-                        #speed.append(prjc)
+                        th.append(issue.id)
          
+         
+            th1 = list(set(th))
+            prjc=len(th1)
             speed.append(prjc)    #print('Количество проектов:', prjc)
+            
         except:
             continue
         
@@ -54,7 +52,10 @@ def GetAllIssuesInAllProjects(redmine, userlist, statuslist,current_date ):
 print(GetAllIssuesInAllProjects(redmine, userlist, statuslist,current_date))
 
 
-name = ("Алексей","Игорь", "Алена")
+name =[]
+for us in userlist:
+    name.append(redmine.user.get(us).firstname)
+    
 y_pos = np.arange(len(name))
     
 plt.bar(y_pos, speed, align='center', alpha=0.5)

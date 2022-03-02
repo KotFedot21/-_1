@@ -3,22 +3,23 @@ import PySimpleGUI as sg
 import matplotlib.pyplot as plt
 from datetime import date
 from datetime import timedelta
+from asyncio import tasks
 plt.rcdefaults()
 import numpy as np
 URL='http://red.eltex.loc'
 KEY='08c017a3b50e09357a72e4448cc1aa6f09271755'
 redmine = Redmine(URL, key=KEY)
-redmine = Redmine(URL, key=KEY)
 
-userID = [69, 12, 123]
+
+
 
 userlist = [
         69,
-        #1027,
-        #1125
+        1027,
+        1125
     ]
 
-userid=69
+
 
 '''69 - Алексей Глебко
 1027 - Игорь Быков
@@ -48,11 +49,11 @@ def information_for_the_week():
     num = current_date.weekday()
     monday_date = current_date - timedelta(days=num)##получаем дату понедельника
     print(monday_date)
-    i = 0
+
     j=0
-    c=0
+
     current_date2=[]
-    while j <= 5: # создает список из дат недели
+    while j <= 4: # создает список из дат недели
 
         current_date1 = str(monday_date)
         current_date2.append(current_date1)
@@ -73,10 +74,9 @@ def information_for_the_week2():
     monday_date = current_date - timedelta(days=num)##получаем дату понедельника
     print(monday_date)
     i = 0
-    j=0
-    c=0
+
     current_date2=[]
-    while i <= 5 : # создает список из дней недели для графика
+    while i <= 4 : # создает список из дней недели для графика
         d.append(monday_date.day)
         monday_date = monday_date + timedelta(1)
         i += 1
@@ -87,12 +87,14 @@ def information_for_the_week2():
 
 def GetAllIssuesInAllProjects(redmine, userlist,statuslist):
     
-    matrix1=[]
+    
+    tasks=[]
     for userid in userlist:
         try:
-            th=0
+            matrix1=[]
+            #th=[]
             for current_date2id in information_for_the_week() :
-                
+                th=[]
                 ms = redmine.user.get(userid, include='memberships')
                 prjc = 0
                 
@@ -103,30 +105,37 @@ def GetAllIssuesInAllProjects(redmine, userlist,statuslist):
                         for issue in issues:
                             
                             
-                            if th==issue.id:
-                                3+5
-                            else:
-                                prjc += 1   
+                            if th!=issue.id:
+                        
+                                #prjc+1 
                                 print(redmine.user.get(userid).firstname, redmine.user.get(userid).lastname)
                                 print('\tPROJECT NAME:', msp.project.name, 'ID:', msp.project.id)
                                 print('\t\tНомер:', issue.id, 'Статус:', issue.status.name, 'Версия:', issue.fixed_version.name, 'Тема:', issue.subject)
-                                th=issue.id
-                print('Количество проектов:', prjc)
+                                th.append(issue.id)
+                             
+                #print('Количество проектов:', prjc)
                             
-                
+                th1 = list(set(th))
+                prjc=len(th1)
+
+
                 matrix1.append(prjc)
                 print(matrix1)
+            tasks.append(matrix1)
+            print(tasks)
         
         except:
             continue
-    return matrix1
+    return tasks
 
-us=str(redmine.user.get(userid).firstname)
+print(tasks)
 s=information_for_the_week2()
 h=GetAllIssuesInAllProjects(redmine, userlist, statuslist)
-print (s)
-print (h)
-plt.plot(s, h, '--r',label=us)
+lin=['r','b','k']
+for hi, us, li in zip(h, userlist, lin):
+        plt.plot(s, hi, li, label=redmine.user.get(us).firstname)
+#plt.figure(figsize=(10, 10))#в дюймах
+plt.xlim([0,29])
+plt.ylim([0, 9])
 plt.legend(fontsize=14)
 plt.show()
-

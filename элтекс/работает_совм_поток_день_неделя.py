@@ -304,19 +304,26 @@ def GetAllIssuesInAllProjects(redmine, userlist):
 
 
 def statistics_for_the_week():
-    
     s=information_for_the_week2()
     h=GetAllIssuesInAllProjects(redmine, userlist)
-
-    
-    lin=['r','b','k']
+    name =[]
+    for us in userlist:
+        name.append(redmine.user.get(us).firstname)
+    index = np.arange(5)#кол-во дат
+    lin=['g','b','m']#g,b,r,c,m,y
+    bw=0.2
+    plt.axis([0,4.5,0,5])
     for hi, us, li in zip(h, userlist, lin):
-            plt.plot(s, hi, li, label=redmine.user.get(us).firstname)
+            plt.bar(index, hi, bw, color=li, label=redmine.user.get(us).firstname)
+            index=index+bw
     #plt.figure(figsize=(10, 10))#в дюймах
-    plt.xlim([0,29])
-    plt.ylim([0, 9])
+    index = np.arange(5)
+    plt.xticks(index+2*bw,s)
+    
+
     plt.legend(fontsize=14)
     plt.show()
+
 
 
 sg.theme('SystemDefault')

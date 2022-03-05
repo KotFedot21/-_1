@@ -30,41 +30,78 @@ statuslist = [
 speed=[]
 current_date = date.today()
 matrix1=[]
+date  = date.today()
+man=[]
 
-def statistics_for_the_month(redmine, userlist,man):
-    tasks=[]
-    for userid in userlist:
-        matrix1=[]
-        for ma in man:
-            th=[]
-            ms = redmine.user.get(userid, include='memberships')
-            prjc = 0
-            for msp in ms.memberships:
-                try:
-                    issues = redmine.issue.filter(project_id=msp.project.id, status_id=5,updated_on=ma, cf_2=userid)
-                    for issue in issues:
-    
-                        print(redmine.user.get(userid).firstname, redmine.user.get(userid).lastname)
-                        print('\tPROJECT NAME:', msp.project.name, 'ID:', msp.project.id)
-                        print('\t\tНомер:', issue.id, 'Статус:', issue.status.name, 'Версия:', issue.fixed_version.name, 'Тема:', issue.subject)
-                        th.append(issue.id)
-                        
-                    th1 = list(set(th))
-                    
-                except:
+def user_data_for_the_month(userid):
+    matrix1=[]
+    for ma in man:
+        th=[]
+        ms = redmine.user.get(userid, include='memberships')
+        prjc = 0
+        for msp in ms.memberships:
+            try:
+                issues = redmine.issue.filter(project_id=msp.project.id, status_id=5,updated_on=ma, cf_2=userid)
+                for issue in issues:
+
+                    print(redmine.user.get(userid).firstname, redmine.user.get(userid).lastname)
                     print('\tPROJECT NAME:', msp.project.name, 'ID:', msp.project.id)
-                    print("Доступ к проекту запрещен")
-
-                prjc=len(th1)
+                    print('\t\tНомер:', issue.id, 'Статус:', issue.status.name, 'Версия:', issue.fixed_version.name, 'Тема:', issue.subject)
+                    th.append(issue.id)
+                    
+                th1 = list(set(th))
                 
-                
+            except:
+                print('\tPROJECT NAME:', msp.project.name, 'ID:', msp.project.id)
+                print("Доступ к проекту запрещен")
 
-            matrix1.append(prjc)
-            print(matrix1)
-        tasks.append(matrix1)
-        print(tasks)
+            prjc=len(th1)
+            
+            
 
-    return tasks
+        matrix1.append(prjc)
+        print(matrix1)
+
+    print(matrix1)
+    return matrix1
+
+def statistics_for_the_month(redmine, userlist):
+
+    
+    agents = 3#кол-во сотр
+    chunksize = 1
+    with Pool(processes=agents) as pool:
+        result = pool.map(user_data_for_the_month, userlist, chunksize)
+    print(result)
+
+    return result
+
+def monthly_schedule():
+
+    d=[]
+
+    
+    date_1= date.replace(day=calendar.monthrange(date.year, date.month)[0])
+    date_2= date.replace(day=calendar.monthrange(date.year, date.month)[1])
+    while date_1<=date:
+        cur_date1 = str(date_1)
+        d.append(date_1.day)
+        man.append(cur_date1)
+        date_1 = date_1 + timedelta(1)
+
+    print(man)
+    print(d)
+    
+    h=statistics_for_the_month(redmine,userlist)
+    
+    lin=['r','b','k']
+    for hi, us, li in zip(h, userlist, lin):
+        plt.plot(d, hi, li, label=redmine.user.get(us).firstname)
+
+    plt.xlim([0,31])
+    plt.ylim([0, 5])
+    plt.legend(fontsize=14)
+    plt.show()
 
 def function_for_the_day(userid):
     th=[]
@@ -363,33 +400,7 @@ while True:
         fearless_table(redmine, userl,statuslist)
 
     elif event in ('месяц'):
-        man=[]
-        d=[]
-        date  = date.today()
-        
-        date_1= date.replace(day=calendar.monthrange(date.year, date.month)[0])
-        date_2= date.replace(day=calendar.monthrange(date.year, date.month)[1])
-        while date_1<=date:
-            cur_date1 = str(date_1)
-            d.append(date_1.day)
-            man.append(cur_date1)
-            date_1 = date_1 + timedelta(1)
-
-        print(man)
-        print(d)
-        
-        h=statistics_for_the_month(redmine,userlist,man)
-        
-        lin=['r','b','k']
-        for hi, us, li in zip(h, userlist, lin):
-            plt.plot(d, hi, li, label=redmine.user.get(us).firstname)
-        #plt.figure(figsize=(10, 10))#в дюймах
-        plt.xlim([0,31])
-        plt.ylim([0, 5])
-        plt.legend(fontsize=14)
-        plt.show()
-           
-        #ID(userID)
+        monthly_schedule()
 
 
     elif event in ('неделя'):
